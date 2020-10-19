@@ -1,62 +1,73 @@
 #pragma once
 
-#include	<DirectXMath.h>
+#include <DirectXMath.h>
 
-#include	"my_mesh.h"
+#define MAP_WIDTH  40
+#define MAP_HEIGHT 15
 
-/*******************************************************************************
-	「敵」クラス
-*******************************************************************************/
+enum STAGE
+{
+    STAGE01,
+    STAGE02,
+    STAGE03,
+    STAGE04
+};
+
+enum Block
+{
+    NONE,
+    BLOCK,
+    RED_BLOCK,
+    TRANSPARENT_RED_BLOCK,
+    BLUE_BLOCK,
+    TRANSPARENT_BLUE_BLOCK,
+
+    SPINE,
+    RED_SPINE,
+    TRANSPARENT_RED_SPINE,
+    BLUE_SPINE,
+    TRANSPARENT_BLUE_SPINE,
+
+    RIGHT_BELT_CONVEYOR,
+    LEFT_BELT_CONVEYOR,
+    CLEAR
+};
+
+//enum Block
+//{
+//    NONE,
+//    WALL,
+//    FLOOR,
+//    RED_WALL,
+//    RED_FLOOR,
+//    TRANSPARENT_RED_WALL,
+//    TRANSPARENT_RED_FLOOR,
+//    BLUE_WALL,
+//    BLUE_FLOOR,
+//    TRANSPARENT_BLUE_WALL,
+//    TRANSPARENT_BLUE_FLOOR,
+//
+//    SPINE,
+//    RED_SPINE,
+//    TRANSPARENT_RED_SPINE,
+//    BLUE_SPINE,
+//    TRANSPARENT_BLUE_SPINE,
+//
+//    RIGHT_BELT_CONVEYOR,
+//    LEFT_BELT_CONVEYOR,
+//    CLEAR
+//};
+
 class Stage
 {
-public:
-	MyMesh				obj;		//	「モデルオブジェクト」
-	DirectX::XMFLOAT3	pos;		//	「位置(座標)」
-	float				angle;		//	「回転角度」
-
-	DirectX::XMFLOAT4	color;		//	「色」
-	bool				exist;		//	「存在フラグ」
-
-
-	//	敵クラスに情報を追加
-	int					state;		//	「状態」
-	int					timer;		//	「タイマー」
-
-	void	Initialize(const char*);																							//	初期化関数
-
-	void	Release();																											//	解放関数
-	void	Move();																												//	移動関数
-	void	Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection, const DirectX::XMFLOAT4& light_dir); 	//	描画関数
-	
-};
-
-
-/*******************************************************************************
-	「敵管理」クラス
-*******************************************************************************/
-class EnemyManager
-{
-public:
-	static const int	MAX = 32;				//	「最大数」	
-
 private:
-	Enemy				data[MAX];				//	「敵データ」
-
+    int BlockNum = 0;
 
 public:
-	void	Initialize();																										//	初期化関数
-	void	Release();																											//	解放関数
-	void	Update();																											//	更新関数
-	void	Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection, const DirectX::XMFLOAT4& light_dir);	//	描画関数
+    void Initialize();
+    void Release();
+    void Update();
+    void Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection, const DirectX::XMFLOAT4& light_dir);	//	描画関数
 
-	Enemy* Set(const char* filename, DirectX::XMFLOAT3 pos, float angle, DirectX::XMFLOAT4 color);								//	敵設定関数
-	Enemy* EnemyManager::Set(MyMesh& mesh, DirectX::XMFLOAT3 pos, float angle, DirectX::XMFLOAT4 color);
-
-	Enemy* Get(int no) {
-		if ((unsigned int)no >= MAX)	return	nullptr;
-		return		&data[no];
-	}
-
+    void CreateBlock();
 };
-
-extern	EnemyManager	enemyManager;		//	こっそり追加

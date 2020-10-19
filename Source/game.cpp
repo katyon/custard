@@ -13,20 +13,24 @@
 
 #include    "sprite.h"
 
+#include    "stage.h"
+
 #include	<time.h>
 
 /*******************************************************************************
 	グローバル変数
 *******************************************************************************/
-MyMesh			field;				//	地面用変数「地面」
+//MyMesh			field;				//	地面用変数「地面」
 Player			player;				//	プレイヤー用変数「プレイヤー」
 Camera			camera;				//	カメラ用変数「カメラ」
 EnemyManager	enemyManager;		//	敵管理用変数「敵管理」
 ShotManager		shotManager;		//	弾管理用変数「弾管理」
 
-MyMesh          endLine;
+Stage           stage;
 
-MyMesh          ball;
+//MyMesh          endLine;
+
+//MyMesh          ball;
 
 Text            text;
 
@@ -80,31 +84,33 @@ void	Game::Initialize()
 
 
 	//	「地面」を初期化
-	field.Initialize();
-	field.SetPrimitive( new GeometricRect( FRAMEWORK.getDevice() ) );
-	field.color = DirectX::XMFLOAT4(0.5f, 1.0f, 0.4f, 1.0f);
-	field.scale = DirectX::XMFLOAT3(16.0f, 20.0f, 70.0f);
+	//field.Initialize();
+	//field.SetPrimitive( new GeometricRect( FRAMEWORK.getDevice() ) );
+	//field.color = DirectX::XMFLOAT4(0.5f, 1.0f, 0.4f, 1.0f);
+	//field.scale = DirectX::XMFLOAT3(16.0f, 20.0f, 70.0f);
 
 	//　線を表示  /////////////////////////////////////////////////
-	endLine.Initialize();
-	endLine.SetPrimitive(new GeometricRect(FRAMEWORK.getDevice()));
-	endLine.color = DirectX::XMFLOAT4(1.0f, 0.5f, 0.4f, 1.0f);
-	endLine.scale = DirectX::XMFLOAT3(16.0f, 20.0f, 2.0f);
-	endLine.pos = { 0.0f, 0.1f, -5.0f };
+	//endLine.Initialize();
+	//endLine.SetPrimitive(new GeometricRect(FRAMEWORK.getDevice()));
+	//endLine.color = DirectX::XMFLOAT4(1.0f, 0.5f, 0.4f, 1.0f);
+	//endLine.scale = DirectX::XMFLOAT3(16.0f, 20.0f, 2.0f);
+	//endLine.pos = { 0.0f, 0.1f, -5.0f };
 	//////////////////////////////////////////////////////////////
 
 	//	「地面」を初期化
-	field.Initialize();
-	field.SetPrimitive(new GeometricRect(FRAMEWORK.getDevice()));
-	field.color = DirectX::XMFLOAT4(0.5f, 1.0f, 0.4f, 1.0f);
-	field.scale = DirectX::XMFLOAT3(16.0f, 20.0f, 70.0f);
+	//field.Initialize();
+	//field.SetPrimitive(new GeometricRect(FRAMEWORK.getDevice()));
+	//field.color = DirectX::XMFLOAT4(0.5f, 1.0f, 0.4f, 1.0f);
+	//field.scale = DirectX::XMFLOAT3(16.0f, 20.0f, 70.0f);
 
 	//　テストボール
-	ball.Initialize();
-	ball.SetPrimitive(new GeometricSphere2(FRAMEWORK.getDevice()));
-	ball.color = DirectX::XMFLOAT4(0.4f, 0.5f, 0.4f, 1.0f);
-	ball.scale = DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f);
-	ball.pos = { 0.0f, 0.5f, 0.0f };
+	//ball.Initialize();
+	//ball.SetPrimitive(new GeometricSphere2(FRAMEWORK.getDevice()));
+	//ball.color = DirectX::XMFLOAT4(0.4f, 0.5f, 0.4f, 1.0f);
+	//ball.scale = DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f);
+	//ball.pos = { 0.0f, 0.5f, 0.0f };
+
+	stage.Initialize();
 
 	//	「プレイヤー」を初期化
 	player.Initialize( "./Data/tank.fbx" );
@@ -122,6 +128,7 @@ void	Game::Initialize()
 	//	弾丸管理を初期化
 	shotManager.Initialize();
 
+	
 	pWaveManager->init(modelNames01, waveData01);
 
 }
@@ -130,14 +137,16 @@ void	Game::Initialize()
 
 void	Game::Release()
 {
-	field.Release();			//	「地面」の解放処理
+	//field.Release();			//	「地面」の解放処理
 	player.Release();			//	「プレイヤー」の解放処理
 	enemyManager.Release();		//	敵管理」の解放処理
 	shotManager.Release();		//	弾丸管理を解放
 
-	endLine.Release();
+	//endLine.Release();
 
-	ball.Release();
+	//ball.Release();
+
+	stage.Release();
 }
 
 
@@ -146,10 +155,11 @@ void	Game::Release()
 bool	Game::Update()
 {
 
-	player.Move();					//	「プレイヤー」の移動処理
+	player.Update();					//	「プレイヤー」の更新処理
 	enemyManager.Update();			//	「敵管理」の更新処理
 	camera.Update();
 	shotManager.Update();			//	弾丸管理を更新
+	stage.Update();
 
 	pWaveManager->create();
 
@@ -185,7 +195,7 @@ bool	Game::Update()
 			Enemy* e = enemyManager.Get(en);
 			if (!e || !e->exist)	continue;
 
-			if (Collision::HitSphere(s->pos, 0.2f, e->pos, e->obj.scale.x))
+			if (HitSphere(s->pos, 0.2f, e->pos, e->obj.scale.x))
 			{
 				s->obj.Release();
 				s->exist = false;
@@ -220,7 +230,7 @@ bool	Game::Update()
 		}
 	}
 
-		ball.pos.z += 0.2;
+    //ball.pos.z += 0.2;
 
 	if (pWaveManager->intervalTimer < -30)
 	{
@@ -237,14 +247,16 @@ void	Game::Render()
 	//	ビュー変換行列
 	view = camera.GetViewMatrix();
 
-	field.Render(view, projection, light_direction);			//	「地面」の描画処理
+	//field.Render(view, projection, light_direction);			//	「地面」の描画処理
 	player.Render(view, projection, light_direction);			//	「プレイヤー」の描画処理
 	enemyManager.Render(view, projection, light_direction);		//	「敵管理」の描画処理
 	shotManager.Render(view, projection, light_direction);		//	弾丸管理を描画
 
-	endLine.Render(view, projection, light_direction);
+	//endLine.Render(view, projection, light_direction);
 
-	ball.Render(view, projection, light_direction);
+	//ball.Render(view, projection, light_direction);
+
+	stage.Render(view, projection, light_direction);
 
 	/*******************************************************************************
 		パーティクル管理を描画

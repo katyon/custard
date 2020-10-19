@@ -93,8 +93,11 @@ void	Camera::Update()
 *******************************************************************************/
 void	Camera::Watch()
 {
-	pos = DirectX::XMFLOAT3(.0f, 10.0f, -20.0f);
-	//target = player.pos;
+	pos.x = player.pos.x + 0.0f;
+	pos.y = player.pos.y + 0.0f;
+	pos.z = player.pos.z - 30.0f;
+
+	target = player.pos;
 }
 /*******************************************************************************
 	「相対位置固定カメラ」の実装

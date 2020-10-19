@@ -2,25 +2,11 @@
 
 #include	"shot.h"
 #include	"particle.h"
+#include    "stage.h"
+#include    "collision.h"
 
-void Player::Jump()
-{
-	pos.y = pos.y + accele * gravity;
-	accele += 0.05f;
-	if (pos.y > 4.0f)
-	{
-		pos.y = 4.0f;
-		accele = 0.1f;
-		jumpFlg = false;
-	}
-	if (pos.y < 0.0f)
-	{
-		pos.y = 0.0f;
-		accele = 0.1f;
-		jumpFlg = false;
-	}
-}
-
+extern MyMesh blocks[MAP_HEIGHT][MAP_WIDTH];
+extern int map0[MAP_HEIGHT][MAP_WIDTH];
 /*******************************************************************************
 	「プレイヤー」クラスの初期化
 *******************************************************************************/
@@ -28,8 +14,10 @@ void	Player::Initialize(const char* filename)
 {
 	obj.Initialize();
 	obj.Load( filename );
-	pos = { -2, 0, -5 };
+	pos = { 0, 5, 0 };
+	speed = 0.1f;
 }
+
 
 
 /*******************************************************************************
@@ -52,12 +40,209 @@ void	Player::Render( const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& pro
 	obj.Render(view, projection, light_dir);
 }
 
+/*******************************************************************************
+	「プレイヤー」クラスの更新
+*******************************************************************************/
+void	Player::Update()
+{
+	Move();
+	Jump();
+
+	for (int height = 0; height < MAP_HEIGHT; height++)
+	{
+		for (int width = 0; width < MAP_WIDTH; width++)
+		{
+			if (HitWall(pos, blocks[height][width].pos))
+			{
+				speed *= -1;
+			}
+
+			if (HitCube(pos, blocks[height][width].pos) > 0)
+			{
+				switch (map0[height][width])
+				{
+				case NONE:
+					break;
+
+				case BLOCK:
+					if (GetAsyncKeyState(' ') & 1)
+					{
+						if (jumpFlg == false)
+						{
+							accele = 0.3f;
+							gravity *= -1;
+							jumpFlg = true;
+						}						
+					}
+					pos.x += speed;
+					pos.y = pre_pos.y;
+					jumpFlg = false;
+					break;
+
+				case RED_BLOCK:
+					if (GetAsyncKeyState(' ') & 1)
+					{
+						if (jumpFlg == false)
+						{
+							accele = 0.3f;
+							gravity *= -1;
+							jumpFlg = true;
+						}
+						for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
+						{
+							for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
+							{
+								if (map0[change_height][change_width] == RED_BLOCK)
+								{
+									map0[change_height][change_width] = TRANSPARENT_RED_BLOCK;
+								}
+								else if (map0[change_height][change_width] == TRANSPARENT_RED_BLOCK)
+								{
+									map0[change_height][change_width] = RED_BLOCK;
+								}
+							}
+						}
+					}
+					pos.x += speed;
+					pos.y = pre_pos.y;
+					jumpFlg = false;
+					break;
+
+				case TRANSPARENT_RED_BLOCK:
+					break;
+
+				case BLUE_BLOCK:
+					if (GetAsyncKeyState(' ') & 1)
+					{
+						if (jumpFlg == false)
+						{
+							accele = 0.3f;
+							gravity *= -1;
+							jumpFlg = true;
+						}
+						for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
+						{
+							for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
+							{
+								if (map0[change_height][change_width] == BLUE_BLOCK)
+								{
+									map0[change_height][change_width] = TRANSPARENT_BLUE_BLOCK;
+								}
+								else if (map0[change_height][change_width] == TRANSPARENT_BLUE_BLOCK)
+								{
+									map0[change_height][change_width] = BLUE_BLOCK;
+								}
+							}
+						}
+					}
+					pos.x += speed;
+					pos.y = pre_pos.y;
+					jumpFlg = false;
+					break;
+
+				case TRANSPARENT_BLUE_BLOCK:
+					break;
+
+				case SPINE:
+					// 死亡フラグtrue
+					break;
+
+				case RED_SPINE:
+					// 死亡フラグtrue
+					break;
+
+				case TRANSPARENT_RED_SPINE:
+					break;
+
+				case BLUE_SPINE:
+					// 死亡フラグtrue
+					break;
+
+				case TRANSPARENT_BLUE_SPINE:
+					break;
+
+				case RIGHT_BELT_CONVEYOR:
+					if (speed  < 0)
+					{
+						speed *= -1;
+					}
+					break;
+
+				case LEFT_BELT_CONVEYOR:
+					if (speed > 0)
+					{
+						speed *= -1;
+					}
+					break;
+
+				case CLEAR:
+					// クリアフラグtrue
+					break;
+				}
+			}
+		}
+	}
+
+	pre_pos.x = pos.x;
+	pre_pos.y = pos.y;
+}
 
 /*******************************************************************************
 	「プレイヤー」クラスの移動
 *******************************************************************************/
 void	Player::Move()
 {
+	//Vertical_movement = (pos.y + (accele * gravity));
+	Vertical_movement = accele * gravity;
+	
+	if (Vertical_movement >	0.3f)
+	{
+		Vertical_movement = 0.3f;
+	}
+	if (Vertical_movement < -0.3f)
+	{
+		Vertical_movement = -0.3f;
+	}
+
+	//pre_pos.y = pos.y;
+	pos.y += Vertical_movement;
+	    
+	//　プレイヤーの移動
+	if (GetAsyncKeyState(VK_LEFT))
+	{
+		pos.x -= 0.1f;
+	}
+	if (GetAsyncKeyState(VK_RIGHT))
+	{
+		pos.x += 0.1f;
+	}
+
+	if (GetAsyncKeyState(VK_UP))
+	{
+		pos.z += 0.1f;
+	}
+	if (GetAsyncKeyState(VK_DOWN))
+	{
+		pos.z -= 0.1f;
+	}
+
+	if (GetAsyncKeyState('W'))
+	{
+		pos.y += 0.1f;
+	}
+	if (GetAsyncKeyState('S'))
+	{
+		pos.y -= 0.1f;
+	}
+}
+
+void Player::Jump()
+{
+	//accele += 0.01f;
+}
+
+#pragma region Store
+
 	//const float dangle	= DirectX::XMConvertToRadians( 1.0f );		//	1度
 	//const float speed	= 0.05f;									//	プレイヤーの速度
 
@@ -72,32 +257,6 @@ void	Player::Move()
 	//	pos.x += dx * speed;
 	//	pos.z += dz * speed;
 	//}
-
-	//　プレイヤーの（瞬間）移動
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		pos.x -= 0.1;
-	}
-	if (GetAsyncKeyState(VK_RIGHT))
-	{
-		pos.x += 0.1;
-	}
-
-	if (GetAsyncKeyState(VK_UP))
-	{
-		pos.z += 0.05f;
-	}
-
-	Jump();
-
-	if (GetAsyncKeyState(' ') & 1)
-	{
-		if (jumpFlg == false)
-		{
-			gravity *= -1;
-			jumpFlg = true;
-		}
-	}
 
 	////	弾丸発射処理
 	//if (GetAsyncKeyState(' ') & 1)
@@ -137,5 +296,4 @@ void	Player::Move()
 	//	}
 
 	//}
-
-}
+#pragma endregion
