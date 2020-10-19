@@ -113,7 +113,8 @@ void	Game::Initialize()
 	stage.Initialize();
 
 	//	「プレイヤー」を初期化
-	player.Initialize( "./Data/tank.fbx" );
+	//player.Initialize( "./Data/tank.fbx" );
+	player.Initialize();
 
 
 	//	敵を生成

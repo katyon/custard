@@ -10,13 +10,24 @@ extern int map0[MAP_HEIGHT][MAP_WIDTH];
 /*******************************************************************************
 	「プレイヤー」クラスの初期化
 *******************************************************************************/
-void	Player::Initialize(const char* filename)
+
+void	Player::Initialize()
 {
 	obj.Initialize();
-	obj.Load( filename );
-	pos = { 0, 5, 0 };
-	speed = 0.1f;
+	obj.SetPrimitive(new GeometricCube(FRAMEWORK.getDevice()));
+	obj.color = DirectX::XMFLOAT4(1.0f, 1.0f, 0.5f, 1.0f);
+	obj.scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+	//obj.Load(filename);
+	pos = { -7, 5, 0 };
+	speed = 0.07f;
 }
+//void	Player::Initialize(const char* filename)
+//{
+//	obj.Initialize();
+//	obj.Load( filename );
+//	pos = { -7, 5, 0 };
+//	speed = 0.06f;
+//}
 
 
 
@@ -54,7 +65,56 @@ void	Player::Update()
 		{
 			if (HitWall(pos, blocks[height][width].pos))
 			{
-				speed *= -1;
+				switch (map0[height][width])
+				{
+				case NONE:
+					break;
+
+				case BLOCK:
+					speed *= -1;
+					break;
+
+				case RED_BLOCK:
+					speed *= -1;
+					break;
+
+				case TRANSPARENT_RED_BLOCK:
+					break;
+
+				case BLUE_BLOCK:
+					speed *= -1;
+					break;
+
+				case TRANSPARENT_BLUE_BLOCK:
+					break;
+
+				case SPINE:
+					break;
+
+				case RED_SPINE:
+					break;
+
+				case TRANSPARENT_RED_SPINE:
+					break;
+
+				case BLUE_SPINE:
+					break;
+
+				case TRANSPARENT_BLUE_SPINE:
+					break;
+
+				case RIGHT_BELT_CONVEYOR:
+					speed *= -1;
+					break;
+
+				case LEFT_BELT_CONVEYOR:
+					speed *= -1;
+					break;
+
+				case CLEAR:
+					speed *= -1;
+					break;
+				}
 			}
 
 			if (HitCube(pos, blocks[height][width].pos) > 0)
@@ -100,6 +160,15 @@ void	Player::Update()
 								{
 									map0[change_height][change_width] = RED_BLOCK;
 								}
+
+								if (map0[change_height][change_width] == RED_SPINE)
+								{
+									map0[change_height][change_width] = TRANSPARENT_RED_SPINE;
+								}
+								else if (map0[change_height][change_width] == TRANSPARENT_RED_SPINE)
+								{
+									map0[change_height][change_width] = RED_SPINE;
+								}
 							}
 						}
 					}
@@ -129,6 +198,14 @@ void	Player::Update()
 									map0[change_height][change_width] = TRANSPARENT_BLUE_BLOCK;
 								}
 								else if (map0[change_height][change_width] == TRANSPARENT_BLUE_BLOCK)
+								{
+									map0[change_height][change_width] = BLUE_BLOCK;
+								}
+								if (map0[change_height][change_width] == BLUE_SPINE)
+								{
+									map0[change_height][change_width] = TRANSPARENT_BLUE_SPINE;
+								}
+								else if (map0[change_height][change_width] == TRANSPARENT_BLUE_SPINE)
 								{
 									map0[change_height][change_width] = BLUE_BLOCK;
 								}
