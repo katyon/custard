@@ -38,6 +38,12 @@ void _Select::update(void)
 
         pSceneManager.setChangeScene(state_game);
     }
+    if (GetAsyncKeyState(VK_BACK) & 1)
+    {
+        pSceneManager.playChoice = true;
+
+        pSceneManager.setChangeScene(state_title);
+    }
 }
 
 void _Select::render(void)
@@ -56,6 +62,7 @@ void _Select::render(void)
     default:
         break;
     }
+    pFramework.sprites[6]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 0, 0, 1920, 1080);
 }
 
 void _Select::end(void)

@@ -150,6 +150,8 @@ bool framework::initialize()
     sprites[3] = std::make_unique<Sprite>(device, L"./Data/sprites/select2.png");
     sprites[4] = std::make_unique<Sprite>(device, L"./Data/sprites/select3.png");
     sprites[5] = std::make_unique<Sprite>(device, L"./Data/sprites/clear.png");
+    sprites[6] = std::make_unique<Sprite>(device, L"./Data/sprites/back_title.png");
+    sprites[7] = std::make_unique<Sprite>(device, L"./Data/sprites/back_stage.png");
 
     pSceneManager.init();
 

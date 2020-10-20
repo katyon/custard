@@ -58,12 +58,19 @@ enum Block
 //    CLEAR
 //};
 
+#define pStage Stage::getInstance()
 class Stage
 {
 private:
     int BlockNum = 0;
 
 public:
+    static  inline Stage& getInstance()
+    {
+        static Stage instance;
+        return instance;
+    }
+
     void Initialize();
     void Release();
     void Update();

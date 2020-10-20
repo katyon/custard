@@ -4,6 +4,7 @@
 #include "clear.h"
 #include "game.h"
 #include "select.h"
+#include "stage.h"
 #include "title.h"
 
 // ä÷êî ----------------------------------------------------------------------------------------
@@ -201,7 +202,7 @@ void SceneGame::render(void)
 
 void SceneGame::end(void)
 {
-
+    pStage.Release();
 }
 
 // Clear

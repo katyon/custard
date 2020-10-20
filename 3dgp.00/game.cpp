@@ -11,6 +11,7 @@
 #include    "sprite.h"
 
 #include    "stage.h"
+#include    "scene_manager.h"
 
 #include	<time.h>
 
@@ -165,6 +166,12 @@ bool	Game::Update()
     *******************************************************************************/
     pParticleManager->Update();
 
+    if (GetAsyncKeyState(VK_BACK) & 1)
+    {
+        pSceneManager.playChoice = true;
+
+        pSceneManager.setChangeScene(state_select);
+    }
 
     ////	敵と弾丸との衝突判定
     //for (int sn = 0; sn < ShotManager::MAX; sn++)
@@ -225,8 +232,7 @@ void	Game::Render()
     //	ビュー変換行列
     view = camera.GetViewMatrix();
 
-    pFramework.sprites[1]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 400 + (player.pos.x * 35), 0, 1280, 720);
-
+    pFramework.sprites[1]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 400 + (player.pos.x * 30), 0, 1280, 720);
 
     //field.Render(view, projection, light_direction);			//	「地面」の描画処理
     player.Render(view, projection, light_direction);			//	「プレイヤー」の描画処理
@@ -243,6 +249,7 @@ void	Game::Render()
     *******************************************************************************/
     pParticleManager->Render(view, projection);
 
+    pFramework.sprites[7]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 0, 0, 1920, 1080);
     // SCORE表示 ///////////////////////////////////
     sprintf_s(SCORE, "SCORE:%d", score);
 

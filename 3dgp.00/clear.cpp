@@ -22,7 +22,14 @@ void Clear::update(void)
 
 void Clear::render(void)
 {
-    pFramework.sprites[5]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 0, 0, 1920, 1080);
+    if (pSceneClear.timer % 60 > 30)
+    {
+        pFramework.sprites[5]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 0, 0, 1920, 1080);
+    }
+    else
+    {
+        pFramework.sprites[5]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 1920, 0, 1920, 1080);
+    }
 }
 
 void Clear::end(void)
