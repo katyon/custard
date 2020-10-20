@@ -228,6 +228,8 @@ void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
 		text.Set(GAME.F, 465, 600);
 		text.Set(GAME.J, 790, 600);
 		text.Set(GAME.K,1120, 600);
+
+		text.Set(GAME.DebugPos, 0, 100);
 		break;
 
 	case SCENE::result:

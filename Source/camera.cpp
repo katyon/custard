@@ -95,7 +95,7 @@ void	Camera::Watch()
 {
 	pos.x = player.pos.x + 0.0f;
 	pos.y = player.pos.y + 0.0f;
-	pos.z = player.pos.z - 30.0f;
+	pos.z = - 40.0f;
 
 	target = player.pos;
 }

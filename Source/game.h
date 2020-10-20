@@ -17,6 +17,8 @@ public:
 	char    J[3];
 	char    K[3];
 
+	char    DebugPos[128];
+
 	int     score = 0;
 
 	bool    createFlg = false;

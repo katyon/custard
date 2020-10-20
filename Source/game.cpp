@@ -118,7 +118,7 @@ void	Game::Initialize()
 
 
 	//	敵を生成
-	enemyManager.Initialize();
+	//enemyManager.Initialize();
 	//const char*			tank  = "./Data/tank.fbx";
 	//float				angle = DirectX::XMConvertToRadians(180.0f);
 	//DirectX::XMFLOAT4	color = DirectX::XMFLOAT4(1.0f, .0f, .0f, 1.0f);
@@ -140,7 +140,7 @@ void	Game::Release()
 {
 	//field.Release();			//	「地面」の解放処理
 	player.Release();			//	「プレイヤー」の解放処理
-	enemyManager.Release();		//	敵管理」の解放処理
+	//enemyManager.Release();		//	敵管理」の解放処理
 	shotManager.Release();		//	弾丸管理を解放
 
 	//endLine.Release();
@@ -157,7 +157,7 @@ bool	Game::Update()
 {
 
 	player.Update();					//	「プレイヤー」の更新処理
-	enemyManager.Update();			//	「敵管理」の更新処理
+	//enemyManager.Update();			//	「敵管理」の更新処理
 	camera.Update();
 	shotManager.Update();			//	弾丸管理を更新
 	stage.Update();
@@ -169,13 +169,13 @@ bool	Game::Update()
 	//	pWaveManager->WaveProceed();
 	//}
 
-	pWaveManager->EnemyTimer++;
-	if (pWaveManager->EnemyTimer > pWaveManager->intervalTimer)
-	{
-		pWaveManager->WaveProceed();
-		pWaveManager->intervalTimer -= 0.5;
-		pWaveManager->EnemyTimer = 0;
-	}
+	//pWaveManager->EnemyTimer++;
+	//if (pWaveManager->EnemyTimer > pWaveManager->intervalTimer)
+	//{
+	//	pWaveManager->WaveProceed();
+	//	pWaveManager->intervalTimer -= 0.5;
+	//	pWaveManager->EnemyTimer = 0;
+	//}
 
 	//enemyManager.ExistFlg();
 
@@ -250,7 +250,7 @@ void	Game::Render()
 
 	//field.Render(view, projection, light_direction);			//	「地面」の描画処理
 	player.Render(view, projection, light_direction);			//	「プレイヤー」の描画処理
-	enemyManager.Render(view, projection, light_direction);		//	「敵管理」の描画処理
+	//enemyManager.Render(view, projection, light_direction);	//	「敵管理」の描画処理
 	shotManager.Render(view, projection, light_direction);		//	弾丸管理を描画
 
 	//endLine.Render(view, projection, light_direction);
@@ -273,5 +273,7 @@ void	Game::Render()
 	sprintf_s(F, "F");
 	sprintf_s(J, "J");
 	sprintf_s(K, "K");
+
+	sprintf_s(DebugPos, "player.pos %.3f \n %.3f", player.pos.x, player.pos.y);
 	////////////////////////////////////////////////
 }

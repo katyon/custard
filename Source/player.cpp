@@ -129,11 +129,12 @@ void	Player::Update()
 					{
 						if (jumpFlg == false)
 						{
-							accele = 0.3f;
+							//accele = 0.3f;
 							gravity *= -1;
 							jumpFlg = true;
 						}						
 					}
+					accele = 0;
 					pos.x += speed;
 					pos.y = pre_pos.y;
 					jumpFlg = false;
@@ -144,7 +145,7 @@ void	Player::Update()
 					{
 						if (jumpFlg == false)
 						{
-							accele = 0.3f;
+							//accele = 0.3f;
 							gravity *= -1;
 							jumpFlg = true;
 						}
@@ -172,6 +173,7 @@ void	Player::Update()
 							}
 						}
 					}
+					accele = 0;
 					pos.x += speed;
 					pos.y = pre_pos.y;
 					jumpFlg = false;
@@ -185,7 +187,7 @@ void	Player::Update()
 					{
 						if (jumpFlg == false)
 						{
-							accele = 0.3f;
+							//accele = 0.3f;
 							gravity *= -1;
 							jumpFlg = true;
 						}
@@ -212,6 +214,7 @@ void	Player::Update()
 							}
 						}
 					}
+					accele = 0;
 					pos.x += speed;
 					pos.y = pre_pos.y;
 					jumpFlg = false;
@@ -269,6 +272,7 @@ void	Player::Update()
 *******************************************************************************/
 void	Player::Move()
 {
+	accele += 0.1f;
 	//Vertical_movement = (pos.y + (accele * gravity));
 	Vertical_movement = accele * gravity;
 	
