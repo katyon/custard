@@ -13,10 +13,14 @@ void _Select::update(void)
 {
     if (GetAsyncKeyState(VK_LEFT) & 1)
     {
+        pSceneManager.playChoice = true;
+
         map_num--;
     }
     if (GetAsyncKeyState(VK_RIGHT) & 1)
     {
+        pSceneManager.playChoice = true;
+
         map_num++;
     }
     if (map_num < 1)
@@ -30,6 +34,8 @@ void _Select::update(void)
 
     if (GetAsyncKeyState(VK_SPACE) & 1)
     {
+        pSceneManager.playChoice = true;
+
         pSceneManager.setChangeScene(state_game);
     }
 }

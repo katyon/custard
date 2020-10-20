@@ -23,6 +23,7 @@ void	Player::Initialize()
     speed = 0.07f;
     resetFlg = true;
     gravity = -1;
+	clearFlg = false;
 }
 //void	Player::Initialize(const char* filename)
 //{
@@ -152,6 +153,8 @@ void	Player::Update()
 					{
 						if (jumpFlg == false)
 						{
+							pSceneManager.playReturn = true;
+
 							//accele = 0.3f;
 							gravity *= -1;
 							jumpFlg = true;
@@ -166,6 +169,8 @@ void	Player::Update()
 				case RED_BLOCK:
 					if (GetAsyncKeyState(' ') & 1)
 					{
+						pSceneManager.playReturn = true;
+
 						if (jumpFlg == false)
 						{
 							//accele = 0.3f;
@@ -210,6 +215,8 @@ void	Player::Update()
 					{
 						if (jumpFlg == false)
 						{
+							pSceneManager.playReturn = true;
+
 							//accele = 0.3f;
 							gravity *= -1;
 							jumpFlg = true;
@@ -297,6 +304,8 @@ void	Player::Update()
 
 	if (deathFlg)
 	{
+		pSceneManager.playDeath = true;
+
 		pos.x = pre_pos.x;
 		pos.y = pre_pos.y;
 

@@ -33,6 +33,9 @@ void SceneManager::update(void)
     case state_game:
         pSceneGame.update();
         break;
+    case state_clear:
+        pSceneClear.update();
+        break;
     case relay:
         pRelay.update();
         break;
@@ -53,6 +56,9 @@ void SceneManager::render(void)
     case state_game:
         pSceneGame.render();
         break;
+    case state_clear:
+        pSceneClear.render();
+        break;
     default: break;
     }
 }
@@ -71,6 +77,9 @@ void SceneManager::changeSceneStateInit(SCENES _next_scene)
     case state_game:
         pSceneGame.end();
         break;
+    case state_clear:
+        pSceneClear.end();
+        break;
     default:
         break;
     }
@@ -86,6 +95,9 @@ void SceneManager::changeSceneStateInit(SCENES _next_scene)
         break;
     case state_game:
         pSceneGame.init();
+        break;
+    case state_clear:
+        pSceneClear.init();
         break;
     default:
         break;
@@ -125,6 +137,7 @@ SCENES SceneManager::getSceneBuffer()
 void SceneTitle::init(void)
 {
     pTitle.init();
+    pSceneManager.playBGM = true;
     timer = 0;
 }
 

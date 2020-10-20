@@ -139,8 +139,10 @@ private:
 	Text						text;
 
 	std::unique_ptr<SoundManager> soundManager;
-	std::unique_ptr<SoundSource> soundSE;
 	std::unique_ptr<SoundSource> soundBGM;
+	std::unique_ptr<SoundSource> choiceSE;
+	std::unique_ptr<SoundSource> deathSE;
+	std::unique_ptr<SoundSource> returnSE;
 
 	bool initialize();
 	void update(float elapsed_time);

@@ -13,13 +13,15 @@ void Clear::update(void)
 {
     if (GetAsyncKeyState(VK_SPACE) & 1)
     {
+        pSceneManager.playChoice = true;
+
         pSceneManager.setChangeScene(state_title);
     }
 }
 
 void Clear::render(void)
 {
-    pFramework.sprites[0]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 0, 0, 1920, 1080);
+    pFramework.sprites[5]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 0, 0, 1920, 1080);
 }
 
 void Clear::end(void)

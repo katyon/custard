@@ -37,6 +37,12 @@ public:
     int getSceneState();
     int getChangeScene();
     SCENES getSceneBuffer();
+
+    bool playBGM = false;
+    bool playChoice = false;
+    bool playDeath = false;
+    bool playReturn = false;
+
 private:
     SCENES change_scene = keep;
     SCENES scene_state = state_title;

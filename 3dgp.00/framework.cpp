@@ -18,8 +18,9 @@ bool framework::initialize()
     {
         soundManager = std::make_unique<SoundManager>(hwnd);
         soundBGM = soundManager->CreateSoundSource("Data/sound/BGM.wav");
-        //soundBGM->Play(true);
-        soundSE = soundManager->CreateSoundSource("Data/sound/SE.wav");
+        choiceSE = soundManager->CreateSoundSource("Data/sound/choice.wav");
+        deathSE = soundManager->CreateSoundSource("Data/sound/death.wav");
+        returnSE = soundManager->CreateSoundSource("Data/sound/return.wav");
         //soundSE->Play(true);
     }
 
@@ -148,6 +149,7 @@ bool framework::initialize()
     sprites[2] = std::make_unique<Sprite>(device, L"./Data/sprites/select1.png");
     sprites[3] = std::make_unique<Sprite>(device, L"./Data/sprites/select2.png");
     sprites[4] = std::make_unique<Sprite>(device, L"./Data/sprites/select3.png");
+    sprites[5] = std::make_unique<Sprite>(device, L"./Data/sprites/clear.png");
 
     pSceneManager.init();
 
@@ -159,18 +161,31 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
 {
     pSceneManager.update();
 
-    if (GetAsyncKeyState('A') & 0x01)
+    if (pSceneManager.playBGM)
     {
-        //soundSE->Play(false);
+        soundBGM->Play(true);
+        pSceneManager.playBGM = false;
     }
-    
-    if (0)
+    if (pSceneManager.playChoice)
     {
-        soundSE->Play(false);
+        choiceSE->Play(false);
+        pSceneManager.playChoice = false;
+    }
+    if (pSceneManager.playDeath)
+    {
+        deathSE->Play(false);
+        pSceneManager.playDeath = false;
+    }
+    if (pSceneManager.playReturn)
+    {
+        returnSE->Play(false);
+        pSceneManager.playReturn = false;
     }
 
-    soundBGM->SetVolume(1.0f);
-    soundSE->SetVolume(1.0f);
+    soundBGM->SetVolume(0.5f);
+    choiceSE->SetVolume(0.7f);
+    deathSE->SetVolume(1.0f);
+    returnSE->SetVolume(1.0f);
 }
 
 
