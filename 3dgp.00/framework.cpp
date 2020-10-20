@@ -14,6 +14,15 @@
 
 bool framework::initialize()
 {
+    // サウンドの初期化
+    {
+        soundManager = std::make_unique<SoundManager>(hwnd);
+        soundBGM = soundManager->CreateSoundSource("Data/sound/BGM.wav");
+        //soundBGM->Play(true);
+        soundSE = soundManager->CreateSoundSource("Data/sound/SE.wav");
+        //soundSE->Play(true);
+    }
+
     HRESULT hr = S_OK;
 
     UINT createDeviceFlags = 0;
@@ -134,7 +143,11 @@ bool framework::initialize()
     //	DirectX初期化終了 以降描画物体の初期化
     ////////////////////////////////////////////////////
 
-    sprites[0] = std::make_unique<Sprite>(device,L"./Data/sprites/title.png");
+    sprites[0] = std::make_unique<Sprite>(device, L"./Data/sprites/title.png");
+    sprites[1] = std::make_unique<Sprite>(device, L"./Data/sprites/game.png");
+    sprites[2] = std::make_unique<Sprite>(device, L"./Data/sprites/select1.png");
+    sprites[3] = std::make_unique<Sprite>(device, L"./Data/sprites/select2.png");
+    sprites[4] = std::make_unique<Sprite>(device, L"./Data/sprites/select3.png");
 
     pSceneManager.init();
 
@@ -145,6 +158,19 @@ bool framework::initialize()
 void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
 {
     pSceneManager.update();
+
+    if (GetAsyncKeyState('A') & 0x01)
+    {
+        //soundSE->Play(false);
+    }
+    
+    if (0)
+    {
+        soundSE->Play(false);
+    }
+
+    soundBGM->SetVolume(1.0f);
+    soundSE->SetVolume(1.0f);
 }
 
 

@@ -14,6 +14,7 @@
 
 #include "blender.h"
 #include "sprite.h"
+#include "Sound.h"
 
 #include "Game.h"
 
@@ -137,6 +138,9 @@ private:
 
 	Text						text;
 
+	std::unique_ptr<SoundManager> soundManager;
+	std::unique_ptr<SoundSource> soundSE;
+	std::unique_ptr<SoundSource> soundBGM;
 
 	bool initialize();
 	void update(float elapsed_time);

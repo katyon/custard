@@ -8,19 +8,20 @@
 extern MyMesh blocks[MAP_HEIGHT][MAP_WIDTH];
 extern int map0[MAP_HEIGHT][MAP_WIDTH];
 /*******************************************************************************
-	「プレイヤー」クラスの初期化
+    「プレイヤー」クラスの初期化
 *******************************************************************************/
 
 void	Player::Initialize()
 {
-	obj.Initialize();
-	obj.SetPrimitive(new GeometricCube(pFramework.getDevice()));
-	obj.color = DirectX::XMFLOAT4(1.0f, 1.0f, 0.5f, 1.0f);
-	obj.scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
-	//obj.Load(filename);
-	pos = { -7, 5, 0 };
-	speed = 0.07f;
-	resetFlg = true;
+    obj.Initialize();
+    obj.SetPrimitive(new GeometricCube(pFramework.getDevice()));
+    obj.color = DirectX::XMFLOAT4(1.0f, 1.0f, 0.5f, 1.0f);
+    obj.scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
+    //obj.Load(filename);
+    pos = { -7, 5, 0 };
+    speed = 0.07f;
+    resetFlg = true;
+    gravity = -1;
 }
 //void	Player::Initialize(const char* filename)
 //{
@@ -33,316 +34,316 @@ void	Player::Initialize()
 
 
 /*******************************************************************************
-	「プレイヤー」クラスの解放
+    「プレイヤー」クラスの解放
 *******************************************************************************/
 void	Player::Release()
 {
-	obj.Release();
+    obj.Release();
 }
 
 
 /*******************************************************************************
-	「プレイヤー」クラスの描画
+    「プレイヤー」クラスの描画
 *******************************************************************************/
 void	Player::Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection, const DirectX::XMFLOAT4& light_dir)
 {
-	obj.pos = this->pos;
-	obj.angle.y = this->angle;
+    obj.pos = this->pos;
+    obj.angle.y = this->angle;
 
-	obj.Render(view, projection, light_dir);
+    obj.Render(view, projection, light_dir);
 }
 
 /*******************************************************************************
-	「プレイヤー」クラスの更新
+    「プレイヤー」クラスの更新
 *******************************************************************************/
 void	Player::Update()
 {
-	Move();
-	Jump();
+    Move();
+    Jump();
 
-	for (int height = 0; height < MAP_HEIGHT; height++)
-	{
-		for (int width = 0; width < MAP_WIDTH; width++)
-		{
-			if (HitWall(pos, blocks[height][width].pos))
-			{
-				switch (map0[height][width])
-				{
-				case NONE:
-					break;
+    for (int height = 0; height < MAP_HEIGHT; height++)
+    {
+        for (int width = 0; width < MAP_WIDTH; width++)
+        {
+            if (HitWall(pos, blocks[height][width].pos))
+            {
+                switch (map0[height][width])
+                {
+                case NONE:
+                    break;
 
-				case BLOCK:
-					speed *= -1;
-					break;
+                case BLOCK:
+                    speed *= -1;
+                    break;
 
-				case RED_BLOCK:
-					speed *= -1;
-					break;
+                case RED_BLOCK:
+                    speed *= -1;
+                    break;
 
-				case TRANSPARENT_RED_BLOCK:
-					break;
+                case TRANSPARENT_RED_BLOCK:
+                    break;
 
-				case BLUE_BLOCK:
-					speed *= -1;
-					break;
+                case BLUE_BLOCK:
+                    speed *= -1;
+                    break;
 
-				case TRANSPARENT_BLUE_BLOCK:
-					break;
+                case TRANSPARENT_BLUE_BLOCK:
+                    break;
 
-				case SPINE:
-					break;
+                case SPINE:
+                    break;
 
-				case RED_SPINE:
-					break;
+                case RED_SPINE:
+                    break;
 
-				case TRANSPARENT_RED_SPINE:
-					break;
+                case TRANSPARENT_RED_SPINE:
+                    break;
 
-				case BLUE_SPINE:
-					break;
+                case BLUE_SPINE:
+                    break;
 
-				case TRANSPARENT_BLUE_SPINE:
-					break;
+                case TRANSPARENT_BLUE_SPINE:
+                    break;
 
-				case RIGHT_BELT_CONVEYOR:
-					speed *= -1;
-					break;
+                case RIGHT_BELT_CONVEYOR:
+                    speed *= -1;
+                    break;
 
-				case LEFT_BELT_CONVEYOR:
-					speed *= -1;
-					break;
+                case LEFT_BELT_CONVEYOR:
+                    speed *= -1;
+                    break;
 
-				case CLEAR:
-					speed *= -1;
-					break;
-				}
-			}
+                case CLEAR:
+                    speed *= -1;
+                    break;
+                }
+            }
 
-			if (HitCube(pos, blocks[height][width].pos) > 0)
-			{
-				switch (map0[height][width])
-				{
-				case NONE:
-					break;
+            if (HitCube(pos, blocks[height][width].pos) > 0)
+            {
+                switch (map0[height][width])
+                {
+                case NONE:
+                    break;
 
-				case BLOCK:
-					if (GetAsyncKeyState(' ') & 1)
-					{
-						if (jumpFlg == false)
-						{
-							//accele = 0.3f;
-							gravity *= -1;
-							jumpFlg = true;
-						}
-					}
-					accele = 0;
-					pos.x += speed;
-					pos.y = pre_pos.y;
-					jumpFlg = false;
-					break;
+                case BLOCK:
+                    if (GetAsyncKeyState(' ') & 1)
+                    {
+                        if (jumpFlg == false)
+                        {
+                            //accele = 0.3f;
+                            gravity *= -1;
+                            jumpFlg = true;
+                        }
+                    }
+                    accele = 0;
+                    pos.x += speed;
+                    pos.y = pre_pos.y;
+                    jumpFlg = false;
+                    break;
 
-				case RED_BLOCK:
-					if (GetAsyncKeyState(' ') & 1)
-					{
-						if (jumpFlg == false)
-						{
-							//accele = 0.3f;
-							gravity *= -1;
-							jumpFlg = true;
-						}
-						for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
-						{
-							for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
-							{
-								if (map0[change_height][change_width] == RED_BLOCK)
-								{
-									map0[change_height][change_width] = TRANSPARENT_RED_BLOCK;
-								}
-								else if (map0[change_height][change_width] == TRANSPARENT_RED_BLOCK)
-								{
-									map0[change_height][change_width] = RED_BLOCK;
-								}
+                case RED_BLOCK:
+                    if (GetAsyncKeyState(' ') & 1)
+                    {
+                        if (jumpFlg == false)
+                        {
+                            //accele = 0.3f;
+                            gravity *= -1;
+                            jumpFlg = true;
+                        }
+                        for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
+                        {
+                            for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
+                            {
+                                if (map0[change_height][change_width] == RED_BLOCK)
+                                {
+                                    map0[change_height][change_width] = TRANSPARENT_RED_BLOCK;
+                                }
+                                else if (map0[change_height][change_width] == TRANSPARENT_RED_BLOCK)
+                                {
+                                    map0[change_height][change_width] = RED_BLOCK;
+                                }
 
-								if (map0[change_height][change_width] == RED_SPINE)
-								{
-									map0[change_height][change_width] = TRANSPARENT_RED_SPINE;
-								}
-								else if (map0[change_height][change_width] == TRANSPARENT_RED_SPINE)
-								{
-									map0[change_height][change_width] = RED_SPINE;
-								}
-							}
-						}
-					}
-					accele = 0;
-					pos.x += speed;
-					pos.y = pre_pos.y;
-					jumpFlg = false;
-					break;
+                                if (map0[change_height][change_width] == RED_SPINE)
+                                {
+                                    map0[change_height][change_width] = TRANSPARENT_RED_SPINE;
+                                }
+                                else if (map0[change_height][change_width] == TRANSPARENT_RED_SPINE)
+                                {
+                                    map0[change_height][change_width] = RED_SPINE;
+                                }
+                            }
+                        }
+                    }
+                    accele = 0;
+                    pos.x += speed;
+                    pos.y = pre_pos.y;
+                    jumpFlg = false;
+                    break;
 
-				case TRANSPARENT_RED_BLOCK:
-					break;
+                case TRANSPARENT_RED_BLOCK:
+                    break;
 
-				case BLUE_BLOCK:
-					if (GetAsyncKeyState(' ') & 1)
-					{
-						if (jumpFlg == false)
-						{
-							//accele = 0.3f;
-							gravity *= -1;
-							jumpFlg = true;
-						}
-						for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
-						{
-							for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
-							{
-								if (map0[change_height][change_width] == BLUE_BLOCK)
-								{
-									map0[change_height][change_width] = TRANSPARENT_BLUE_BLOCK;
-								}
-								else if (map0[change_height][change_width] == TRANSPARENT_BLUE_BLOCK)
-								{
-									map0[change_height][change_width] = BLUE_BLOCK;
-								}
-								if (map0[change_height][change_width] == BLUE_SPINE)
-								{
-									map0[change_height][change_width] = TRANSPARENT_BLUE_SPINE;
-								}
-								else if (map0[change_height][change_width] == TRANSPARENT_BLUE_SPINE)
-								{
-									map0[change_height][change_width] = BLUE_BLOCK;
-								}
-							}
-						}
-					}
-					accele = 0;
-					pos.x += speed;
-					pos.y = pre_pos.y;
-					jumpFlg = false;
-					break;
+                case BLUE_BLOCK:
+                    if (GetAsyncKeyState(' ') & 1)
+                    {
+                        if (jumpFlg == false)
+                        {
+                            //accele = 0.3f;
+                            gravity *= -1;
+                            jumpFlg = true;
+                        }
+                        for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
+                        {
+                            for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
+                            {
+                                if (map0[change_height][change_width] == BLUE_BLOCK)
+                                {
+                                    map0[change_height][change_width] = TRANSPARENT_BLUE_BLOCK;
+                                }
+                                else if (map0[change_height][change_width] == TRANSPARENT_BLUE_BLOCK)
+                                {
+                                    map0[change_height][change_width] = BLUE_BLOCK;
+                                }
+                                if (map0[change_height][change_width] == BLUE_SPINE)
+                                {
+                                    map0[change_height][change_width] = TRANSPARENT_BLUE_SPINE;
+                                }
+                                else if (map0[change_height][change_width] == TRANSPARENT_BLUE_SPINE)
+                                {
+                                    map0[change_height][change_width] = BLUE_BLOCK;
+                                }
+                            }
+                        }
+                    }
+                    accele = 0;
+                    pos.x += speed;
+                    pos.y = pre_pos.y;
+                    jumpFlg = false;
+                    break;
 
-				case TRANSPARENT_BLUE_BLOCK:
-					break;
+                case TRANSPARENT_BLUE_BLOCK:
+                    break;
 
-				case SPINE:
-					// 死亡フラグtrue
-					deathFlg = true;
-					break;
+                case SPINE:
+                    // 死亡フラグtrue
+                    deathFlg = true;
+                    break;
 
-				case RED_SPINE:
-					// 死亡フラグtrue
-					deathFlg = true;
-					break;
+                case RED_SPINE:
+                    // 死亡フラグtrue
+                    deathFlg = true;
+                    break;
 
-				case TRANSPARENT_RED_SPINE:
-					break;
+                case TRANSPARENT_RED_SPINE:
+                    break;
 
-				case BLUE_SPINE:
-					// 死亡フラグtrue
-					deathFlg = true;
-					break;
+                case BLUE_SPINE:
+                    // 死亡フラグtrue
+                    deathFlg = true;
+                    break;
 
-				case TRANSPARENT_BLUE_SPINE:
-					break;
+                case TRANSPARENT_BLUE_SPINE:
+                    break;
 
-				case RIGHT_BELT_CONVEYOR:
-					if (speed < 0)
-					{
-						speed *= -1;
-					}
-					break;
+                case RIGHT_BELT_CONVEYOR:
+                    if (speed < 0)
+                    {
+                        speed *= -1;
+                    }
+                    break;
 
-				case LEFT_BELT_CONVEYOR:
-					if (speed > 0)
-					{
-						speed *= -1;
-					}
-					break;
+                case LEFT_BELT_CONVEYOR:
+                    if (speed > 0)
+                    {
+                        speed *= -1;
+                    }
+                    break;
 
-				case CLEAR:
-					// クリアフラグtrue
-					clearFlg = true;
-					break;
-				}
-			}
-		}
-	}
+                case CLEAR:
+                    // クリアフラグtrue
+                    clearFlg = true;
+                    break;
+                }
+            }
+        }
+    }
 
-	if (clearFlg)
-	{
-		pSceneManager.setChangeScene(state_clear);
-	}
+    if (clearFlg)
+    {
+        pSceneManager.setChangeScene(state_clear);
+    }
 
-	if (deathFlg)
-	{
-		obj.scale.x -= 0.05f;
-		obj.scale.y -= 0.05f;		
-		obj.scale.z -= 0.05f;
+    if (deathFlg)
+    {
+        obj.scale.x -= 0.05f;
+        obj.scale.y -= 0.05f;
+        obj.scale.z -= 0.05f;
 
-		if (obj.scale.x < 0)
-		{
-			resetFlg = true;
-			deathFlg = false;
-		}
-	}
+        if (obj.scale.x < 0)
+        {
+            resetFlg = true;
+            deathFlg = false;
+        }
+    }
 
-	pre_pos.x = pos.x;
-	pre_pos.y = pos.y;
+    pre_pos.x = pos.x;
+    pre_pos.y = pos.y;
 }
 
 /*******************************************************************************
-	「プレイヤー」クラスの移動
+    「プレイヤー」クラスの移動
 *******************************************************************************/
 void	Player::Move()
 {
-	accele += 0.1f;
-	//Vertical_movement = (pos.y + (accele * gravity));
-	Vertical_movement = accele * gravity;
+    accele += 0.1f;
+    //Vertical_movement = (pos.y + (accele * gravity));
+    Vertical_movement = accele * gravity;
 
-	if (Vertical_movement > 0.3f)
-	{
-		Vertical_movement = 0.3f;
-	}
-	if (Vertical_movement < -0.3f)
-	{
-		Vertical_movement = -0.3f;
-	}
+    if (Vertical_movement > 0.3f)
+    {
+        Vertical_movement = 0.3f;
+    }
+    if (Vertical_movement < -0.3f)
+    {
+        Vertical_movement = -0.3f;
+    }
 
-	//pre_pos.y = pos.y;
-	pos.y += Vertical_movement;
+    //pre_pos.y = pos.y;
+    pos.y += Vertical_movement;
 
-	//　プレイヤーの移動
-	if (GetAsyncKeyState(VK_LEFT))
-	{
-		pos.x -= 0.1f;
-	}
-	if (GetAsyncKeyState(VK_RIGHT))
-	{
-		pos.x += 0.1f;
-	}
+    //　プレイヤーの移動
+    if (GetAsyncKeyState(VK_LEFT))
+    {
+        pos.x -= 0.1f;
+    }
+    if (GetAsyncKeyState(VK_RIGHT))
+    {
+        pos.x += 0.1f;
+    }
 
-	if (GetAsyncKeyState(VK_UP))
-	{
-		pos.z += 0.1f;
-	}
-	if (GetAsyncKeyState(VK_DOWN))
-	{
-		pos.z -= 0.1f;
-	}
+    if (GetAsyncKeyState(VK_UP))
+    {
+        pos.z += 0.1f;
+    }
+    if (GetAsyncKeyState(VK_DOWN))
+    {
+        pos.z -= 0.1f;
+    }
 
-	if (GetAsyncKeyState('W'))
-	{
-		pos.y += 0.1f;
-	}
-	if (GetAsyncKeyState('S'))
-	{
-		pos.y -= 0.1f;
-	}
+    if (GetAsyncKeyState('W'))
+    {
+        pos.y += 0.1f;
+    }
+    if (GetAsyncKeyState('S'))
+    {
+        pos.y -= 0.1f;
+    }
 }
 
 void Player::Jump()
 {
-	//accele += 0.01f;
+    //accele += 0.01f;
 }
 
 #pragma region Store
