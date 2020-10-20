@@ -4,6 +4,7 @@
 #include    "stage.h"
 #include    "collision.h"
 #include    "scene_manager.h"
+#include    "select.h"
 
 extern MyMesh blocks[MAP_HEIGHT][MAP_WIDTH];
 extern int map0[MAP_HEIGHT][MAP_WIDTH];
@@ -58,237 +59,287 @@ void	Player::Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& proj
 *******************************************************************************/
 void	Player::Update()
 {
-    Move();
-    Jump();
+	Move();
+	Jump();
 
-    for (int height = 0; height < MAP_HEIGHT; height++)
-    {
-        for (int width = 0; width < MAP_WIDTH; width++)
-        {
-            if (HitWall(pos, blocks[height][width].pos))
-            {
-                switch (map0[height][width])
-                {
-                case NONE:
-                    break;
+	if (resetFlg)
+	{
+		obj.scale = { 1.0f, 1.0f, 1.0f };
+		switch (p_Select.getInstance().map_num)
+		{
+		case 1:
+			pos = { -7, 0, -1 };
+			break;
 
-                case BLOCK:
-                    speed *= -1;
-                    break;
+		case 2:
+			pos = { -7, 0, -1 };
+			break;
 
-                case RED_BLOCK:
-                    speed *= -1;
-                    break;
+		case 3:
+			pos = { -5, 0, -1 };
+			break;
+		}
+		resetFlg = false;
+	}
 
-                case TRANSPARENT_RED_BLOCK:
-                    break;
+	for (int height = 0; height < MAP_HEIGHT; height++)
+	{
+		for (int width = 0; width < MAP_WIDTH; width++)
+		{
+			if (HitWall(pos, blocks[height][width].pos))
+			{
+				switch (map0[height][width])
+				{
+				case NONE:
+					break;
 
-                case BLUE_BLOCK:
-                    speed *= -1;
-                    break;
+				case BLOCK:
+					speed *= -1;
+					break;
 
-                case TRANSPARENT_BLUE_BLOCK:
-                    break;
+				case RED_BLOCK:
+					speed *= -1;
+					break;
 
-                case SPINE:
-                    break;
+				case TRANSPARENT_RED_BLOCK:
+					break;
 
-                case RED_SPINE:
-                    break;
+				case BLUE_BLOCK:
+					speed *= -1;
+					break;
 
-                case TRANSPARENT_RED_SPINE:
-                    break;
+				case TRANSPARENT_BLUE_BLOCK:
+					break;
 
-                case BLUE_SPINE:
-                    break;
+				case SPINE:
+					break;
 
-                case TRANSPARENT_BLUE_SPINE:
-                    break;
+				case RED_SPINE:
+					break;
 
-                case RIGHT_BELT_CONVEYOR:
-                    speed *= -1;
-                    break;
+				case TRANSPARENT_RED_SPINE:
+					break;
 
-                case LEFT_BELT_CONVEYOR:
-                    speed *= -1;
-                    break;
+				case BLUE_SPINE:
+					break;
 
-                case CLEAR:
-                    speed *= -1;
-                    break;
-                }
-            }
+				case TRANSPARENT_BLUE_SPINE:
+					break;
 
-            if (HitCube(pos, blocks[height][width].pos) > 0)
-            {
-                switch (map0[height][width])
-                {
-                case NONE:
-                    break;
+				case RIGHT_BELT_CONVEYOR:
+					speed *= -1;
+					break;
 
-                case BLOCK:
-                    if (GetAsyncKeyState(' ') & 1)
-                    {
-                        if (jumpFlg == false)
-                        {
-                            //accele = 0.3f;
-                            gravity *= -1;
-                            jumpFlg = true;
-                        }
-                    }
-                    accele = 0;
-                    pos.x += speed;
-                    pos.y = pre_pos.y;
-                    jumpFlg = false;
-                    break;
+				case LEFT_BELT_CONVEYOR:
+					speed *= -1;
+					break;
 
-                case RED_BLOCK:
-                    if (GetAsyncKeyState(' ') & 1)
-                    {
-                        if (jumpFlg == false)
-                        {
-                            //accele = 0.3f;
-                            gravity *= -1;
-                            jumpFlg = true;
-                        }
-                        for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
-                        {
-                            for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
-                            {
-                                if (map0[change_height][change_width] == RED_BLOCK)
-                                {
-                                    map0[change_height][change_width] = TRANSPARENT_RED_BLOCK;
-                                }
-                                else if (map0[change_height][change_width] == TRANSPARENT_RED_BLOCK)
-                                {
-                                    map0[change_height][change_width] = RED_BLOCK;
-                                }
+				case CLEAR:
+					speed *= -1;
+					break;
+				}
+			}
 
-                                if (map0[change_height][change_width] == RED_SPINE)
-                                {
-                                    map0[change_height][change_width] = TRANSPARENT_RED_SPINE;
-                                }
-                                else if (map0[change_height][change_width] == TRANSPARENT_RED_SPINE)
-                                {
-                                    map0[change_height][change_width] = RED_SPINE;
-                                }
-                            }
-                        }
-                    }
-                    accele = 0;
-                    pos.x += speed;
-                    pos.y = pre_pos.y;
-                    jumpFlg = false;
-                    break;
+			if (HitCube(pos, blocks[height][width].pos) > 0)
+			{
+				switch (map0[height][width])
+				{
+				case NONE:
+					break;
 
-                case TRANSPARENT_RED_BLOCK:
-                    break;
+				case BLOCK:
+					if (GetAsyncKeyState(' ') & 1)
+					{
+						if (jumpFlg == false)
+						{
+							//accele = 0.3f;
+							gravity *= -1;
+							jumpFlg = true;
+						}
+					}
+					accele = 0;
+					pos.x += speed;
+					pos.y = pre_pos.y;
+					jumpFlg = false;
+					break;
 
-                case BLUE_BLOCK:
-                    if (GetAsyncKeyState(' ') & 1)
-                    {
-                        if (jumpFlg == false)
-                        {
-                            //accele = 0.3f;
-                            gravity *= -1;
-                            jumpFlg = true;
-                        }
-                        for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
-                        {
-                            for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
-                            {
-                                if (map0[change_height][change_width] == BLUE_BLOCK)
-                                {
-                                    map0[change_height][change_width] = TRANSPARENT_BLUE_BLOCK;
-                                }
-                                else if (map0[change_height][change_width] == TRANSPARENT_BLUE_BLOCK)
-                                {
-                                    map0[change_height][change_width] = BLUE_BLOCK;
-                                }
-                                if (map0[change_height][change_width] == BLUE_SPINE)
-                                {
-                                    map0[change_height][change_width] = TRANSPARENT_BLUE_SPINE;
-                                }
-                                else if (map0[change_height][change_width] == TRANSPARENT_BLUE_SPINE)
-                                {
-                                    map0[change_height][change_width] = BLUE_BLOCK;
-                                }
-                            }
-                        }
-                    }
-                    accele = 0;
-                    pos.x += speed;
-                    pos.y = pre_pos.y;
-                    jumpFlg = false;
-                    break;
+				case RED_BLOCK:
+					if (GetAsyncKeyState(' ') & 1)
+					{
+						if (jumpFlg == false)
+						{
+							//accele = 0.3f;
+							gravity *= -1;
+							jumpFlg = true;
+						}
+						for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
+						{
+							for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
+							{
+								if (map0[change_height][change_width] == RED_BLOCK)
+								{
+									map0[change_height][change_width] = TRANSPARENT_RED_BLOCK;
+								}
+								else if (map0[change_height][change_width] == TRANSPARENT_RED_BLOCK)
+								{
+									map0[change_height][change_width] = RED_BLOCK;
+								}
 
-                case TRANSPARENT_BLUE_BLOCK:
-                    break;
+								if (map0[change_height][change_width] == RED_SPINE)
+								{
+									map0[change_height][change_width] = TRANSPARENT_RED_SPINE;
+								}
+								else if (map0[change_height][change_width] == TRANSPARENT_RED_SPINE)
+								{
+									map0[change_height][change_width] = RED_SPINE;
+								}
+							}
+						}
+					}
+					accele = 0;
+					pos.x += speed;
+					pos.y = pre_pos.y;
+					jumpFlg = false;
+					break;
 
-                case SPINE:
-                    // 死亡フラグtrue
-                    deathFlg = true;
-                    break;
+				case TRANSPARENT_RED_BLOCK:
+					break;
 
-                case RED_SPINE:
-                    // 死亡フラグtrue
-                    deathFlg = true;
-                    break;
+				case BLUE_BLOCK:
+					if (GetAsyncKeyState(' ') & 1)
+					{
+						if (jumpFlg == false)
+						{
+							//accele = 0.3f;
+							gravity *= -1;
+							jumpFlg = true;
+						}
+						for (int change_height = 0; change_height < MAP_HEIGHT; change_height++)
+						{
+							for (int change_width = 0; change_width < MAP_WIDTH; change_width++)
+							{
+								if (map0[change_height][change_width] == BLUE_BLOCK)
+								{
+									map0[change_height][change_width] = TRANSPARENT_BLUE_BLOCK;
+								}
+								else if (map0[change_height][change_width] == TRANSPARENT_BLUE_BLOCK)
+								{
+									map0[change_height][change_width] = BLUE_BLOCK;
+								}
+								if (map0[change_height][change_width] == BLUE_SPINE)
+								{
+									map0[change_height][change_width] = TRANSPARENT_BLUE_SPINE;
+								}
+								else if (map0[change_height][change_width] == TRANSPARENT_BLUE_SPINE)
+								{
+									map0[change_height][change_width] = BLUE_SPINE;
+								}
+							}
+						}
+					}
+					accele = 0;
+					pos.x += speed;
+					pos.y = pre_pos.y;
+					jumpFlg = false;
+					break;
 
-                case TRANSPARENT_RED_SPINE:
-                    break;
+				case TRANSPARENT_BLUE_BLOCK:
+					break;
 
-                case BLUE_SPINE:
-                    // 死亡フラグtrue
-                    deathFlg = true;
-                    break;
+				case SPINE:
+					// 死亡フラグtrue
+					deathFlg = true;
+					break;
 
-                case TRANSPARENT_BLUE_SPINE:
-                    break;
+				case RED_SPINE:
+					// 死亡フラグtrue
+					deathFlg = true;
+					break;
 
-                case RIGHT_BELT_CONVEYOR:
-                    if (speed < 0)
-                    {
-                        speed *= -1;
-                    }
-                    break;
+				case TRANSPARENT_RED_SPINE:
+					break;
 
-                case LEFT_BELT_CONVEYOR:
-                    if (speed > 0)
-                    {
-                        speed *= -1;
-                    }
-                    break;
+				case BLUE_SPINE:
+					// 死亡フラグtrue
+					deathFlg = true;
+					break;
 
-                case CLEAR:
-                    // クリアフラグtrue
-                    clearFlg = true;
-                    break;
-                }
-            }
-        }
-    }
+				case TRANSPARENT_BLUE_SPINE:
+					break;
 
-    if (clearFlg)
-    {
-        pSceneManager.setChangeScene(state_clear);
-    }
+				case RIGHT_BELT_CONVEYOR:
+					if (speed < 0)
+					{
+						speed *= -1;
+					}
+					break;
 
-    if (deathFlg)
-    {
-        obj.scale.x -= 0.05f;
-        obj.scale.y -= 0.05f;
-        obj.scale.z -= 0.05f;
+				case LEFT_BELT_CONVEYOR:
+					if (speed > 0)
+					{
+						speed *= -1;
+					}
+					break;
 
-        if (obj.scale.x < 0)
-        {
-            resetFlg = true;
-            deathFlg = false;
-        }
-    }
+				case CLEAR:
+					// クリアフラグtrue
+					clearFlg = true;
+					break;
+				}
+			}
+		}
+	}
 
-    pre_pos.x = pos.x;
-    pre_pos.y = pos.y;
+	if (clearFlg)
+	{
+		pSceneManager.setChangeScene(state_clear);
+	}
+
+	if (deathFlg)
+	{
+		pos.x = pre_pos.x;
+		pos.y = pre_pos.y;
+
+		obj.scale.x -= 0.05f;
+		obj.scale.y -= 0.05f;		
+		obj.scale.z -= 0.05f;
+
+		obj.color.w -= 0.05;
+
+
+		for (int n = 0; n < 10; n++)
+		{
+			DirectX::XMFLOAT3	vec, power;
+			const float scale = 0.15f;
+			const DirectX::XMFLOAT4 color(1.0f, .0f, 1.0f, 0.5f);
+
+			vec.x = ((rand() % 2001) - 1000) * 0.001f * 0.03f;
+			vec.y = ((rand() % 2001) - 1000) * 0.001f * 0.03f;
+			vec.z = ((rand() % 2001) - 1000) * 0.001f * 0.03f;
+
+			power.x = 0.0f;
+			power.y = 0.0f;
+			power.z = 0.0f;
+
+			pParticleManager->Set(pos, vec, power, scale, color, 30);
+		}
+
+		if (obj.scale.x < 0)
+		{
+			delayTimer++;
+			if (delayTimer > 60)
+			{
+				resetFlg = true;
+				deathFlg = false;
+				obj.scale = { 0, 0, 0 };
+				obj.color.w = 1.0f;
+				delayTimer = 0;
+			}
+		}
+	}
+
+	pre_pos.x = pos.x;
+	pre_pos.y = pos.y;
 }
 
 /*******************************************************************************
