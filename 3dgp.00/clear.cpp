@@ -17,6 +17,7 @@ void Clear::update(void)
     }
 }
 
+
 void Clear::render(void)
 {
     pFramework.sprites[0]->Render(pFramework.getContext(), 0, 0, 1920, 1080, 0, 0, 1920, 1080);
