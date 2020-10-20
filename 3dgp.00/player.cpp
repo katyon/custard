@@ -19,7 +19,7 @@ void	Player::Initialize()
     obj.color = DirectX::XMFLOAT4(1.0f, 1.0f, 0.5f, 1.0f);
     obj.scale = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
     //obj.Load(filename);
-    pos = { -7, 5, 0 };
+    pos = { -10, 0.0f, -10 };
     speed = 0.07f;
     resetFlg = true;
     gravity = -1;
@@ -65,22 +65,30 @@ void	Player::Update()
 
 	if (resetFlg)
 	{
+		gravity = -1;
 		obj.scale = { 1.0f, 1.0f, 1.0f };
 		switch (p_Select.getInstance().map_num)
 		{
 		case 1:
-			pos = { -7, 0, -1 };
+			pos = { -7, 0, 0.5 };
 			break;
 
 		case 2:
-			pos = { -7, 0, -1 };
+			pos = { -7, 10, 0.5 };
 			break;
 
 		case 3:
-			pos = { -5, 0, -1 };
+			pos = { -5, 0, 0.5 };
 			break;
 		}
 		resetFlg = false;
+	}
+	else if (deathFlg == false)
+	{
+		if (pos.y < -5.0f || pos.y > 15.0f)
+		{
+			deathFlg = true;
+		}
 	}
 
 	for (int height = 0; height < MAP_HEIGHT; height++)
@@ -340,15 +348,15 @@ void	Player::Update()
 			{
 				resetFlg = true;
 				deathFlg = false;
-				obj.scale = { 0, 0, 0 };
+				obj.scale = { 1, 1, 1 };
 				obj.color.w = 1.0f;
 				delayTimer = 0;
 			}
 		}
 	}
-
 	pre_pos.x = pos.x;
 	pre_pos.y = pos.y;
+ 
 }
 
 /*******************************************************************************
@@ -371,34 +379,6 @@ void	Player::Move()
 
     //pre_pos.y = pos.y;
     pos.y += Vertical_movement;
-
-    //　プレイヤーの移動
-    if (GetAsyncKeyState(VK_LEFT))
-    {
-        pos.x -= 0.1f;
-    }
-    if (GetAsyncKeyState(VK_RIGHT))
-    {
-        pos.x += 0.1f;
-    }
-
-    if (GetAsyncKeyState(VK_UP))
-    {
-        pos.z += 0.1f;
-    }
-    if (GetAsyncKeyState(VK_DOWN))
-    {
-        pos.z -= 0.1f;
-    }
-
-    if (GetAsyncKeyState('W'))
-    {
-        pos.y += 0.1f;
-    }
-    if (GetAsyncKeyState('S'))
-    {
-        pos.y -= 0.1f;
-    }
 }
 
 void Player::Jump()

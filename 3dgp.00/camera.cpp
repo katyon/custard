@@ -65,9 +65,6 @@ void	Camera::Update()
 	{
 	case WATCH:			Watch();		break;		//	「監視カメラ」
 	case DIRECTIONAL:	Directional();	break;		//	「相対位置固定カメラ」
-	case CHASE:			Chase();		break;		//	「追跡カメラ」
-	case TPS:			Tps();			break;		//	「3人称カメラ(TPS)」
-	case FPS:			Fps();			break;		//	「1人称カメラ(FPS)」
 	}
 
 
@@ -104,9 +101,12 @@ void	Camera::Watch()
 *******************************************************************************/
 void	Camera::Directional()
 {
-	pos.x = player.pos.x + 8.0f;
-	pos.y = player.pos.y + 5.0f;
-	pos.z = player.pos.z - 8.0f;
+	pos.x = 5.0f + player.pos.x / 2;
+	pos.y = 5.0 + player.pos.y / 5;
+	pos.z = -40.0f;
+	//pos.x = player.pos.x + 8.0f;
+	//pos.y = player.pos.y + 5.0f;
+	//pos.z = player.pos.z - 8.0f;
 
 	target = player.pos;
 }

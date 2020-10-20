@@ -16,9 +16,6 @@ public:
 	{
 		WATCH,				//	「監視カメラ」
 		DIRECTIONAL,		//	「相対位置固定カメラ」
-		CHASE,				//	「追跡カメラ」
-		TPS,				//	「3人称カメラ(TPS)」
-		FPS,				//	「1人称カメラ(FPS)」
 		MAX					//	「カメラ管理番号最大値」	
 	};
 
