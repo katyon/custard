@@ -11,7 +11,7 @@ void _Select::init(void)
 
 void _Select::update(void)
 {
-
+    map_num = 1;
 
     if (GetAsyncKeyState(VK_SPACE) & 1)
     {

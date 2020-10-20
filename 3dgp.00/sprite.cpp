@@ -303,11 +303,6 @@ void Sprite::Render(ID3D11DeviceContext* context,
 	context->Draw(4, 0);
 }
 
-
-
-
-
-
 //************************************************************************//
 //
 //	class SpriteBatch

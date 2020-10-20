@@ -115,7 +115,7 @@ bool framework::initialize()
 
     text.Initialize(device, L"./Data/fonts/font6.png", 32);
 
-    SetClearColor(0.0f, 0.125f, 0.3f);
+    SetClearColor(1.0f, 1.0f, 1.0f);
 
 #ifdef USE_IMGUI
     // セットアップ
@@ -175,7 +175,7 @@ void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
     bm.begin();
 
     pSceneManager.render();
-    
+
     float bmTimer = bm.end();
 
 

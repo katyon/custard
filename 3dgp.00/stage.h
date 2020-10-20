@@ -69,5 +69,6 @@ public:
     void Update();
     void Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection, const DirectX::XMFLOAT4& light_dir);	//	ï`âÊä÷êî
 
+    void LoadMap(int map_num);
     void CreateBlock();
 };
