@@ -4,6 +4,7 @@
 #include    "stage.h"
 #include    "collision.h"
 #include    "scene_manager.h"
+#include    "select.h"
 
 extern MyMesh blocks[MAP_HEIGHT][MAP_WIDTH];
 extern int map0[MAP_HEIGHT][MAP_WIDTH];
@@ -59,6 +60,26 @@ void	Player::Update()
 {
 	Move();
 	Jump();
+
+	if (resetFlg)
+	{
+		obj.scale = { 1.0f, 1.0f, 1.0f };
+		switch (p_Select.getInstance().map_num)
+		{
+		case 1:
+			pos = { -7, 0, -1 };
+			break;
+
+		case 2:
+			pos = { -7, 0, -1 };
+			break;
+
+		case 3:
+			pos = { -5, 0, -1 };
+			break;
+		}
+		resetFlg = false;
+	}
 
 	for (int height = 0; height < MAP_HEIGHT; height++)
 	{
@@ -210,7 +231,7 @@ void	Player::Update()
 								}
 								else if (map0[change_height][change_width] == TRANSPARENT_BLUE_SPINE)
 								{
-									map0[change_height][change_width] = BLUE_BLOCK;
+									map0[change_height][change_width] = BLUE_SPINE;
 								}
 							}
 						}
@@ -275,14 +296,44 @@ void	Player::Update()
 
 	if (deathFlg)
 	{
+		pos.x = pre_pos.x;
+		pos.y = pre_pos.y;
+
 		obj.scale.x -= 0.05f;
 		obj.scale.y -= 0.05f;		
 		obj.scale.z -= 0.05f;
 
+		obj.color.w -= 0.05;
+
+
+		for (int n = 0; n < 10; n++)
+		{
+			DirectX::XMFLOAT3	vec, power;
+			const float scale = 0.15f;
+			const DirectX::XMFLOAT4 color(1.0f, .0f, 1.0f, 0.5f);
+
+			vec.x = ((rand() % 2001) - 1000) * 0.001f * 0.03f;
+			vec.y = ((rand() % 2001) - 1000) * 0.001f * 0.03f;
+			vec.z = ((rand() % 2001) - 1000) * 0.001f * 0.03f;
+
+			power.x = 0.0f;
+			power.y = 0.0f;
+			power.z = 0.0f;
+
+			pParticleManager->Set(pos, vec, power, scale, color, 30);
+		}
+
 		if (obj.scale.x < 0)
 		{
-			resetFlg = true;
-			deathFlg = false;
+			delayTimer++;
+			if (delayTimer > 60)
+			{
+				resetFlg = true;
+				deathFlg = false;
+				obj.scale = { 0, 0, 0 };
+				obj.color.w = 1.0f;
+				delayTimer = 0;
+			}
 		}
 	}
 

@@ -261,17 +261,12 @@ void Stage::Release()
 
 void Stage::Update()
 {
-    for (int height = 0; height < MAP_HEIGHT; height++)
+    if (player.resetFlg)
     {
-        for (int width = 0; width < MAP_WIDTH; width++)
-        {
-            if (HitCube(player.pos, blocks[height][width].pos))
-            {
-
-            }
-        }
+        LoadMap(p_Select.map_num);
     }
 }
+
 
 void Stage::Render(const DirectX::XMMATRIX& view, const DirectX::XMMATRIX& projection, const DirectX::XMFLOAT4& light_dir)
 {

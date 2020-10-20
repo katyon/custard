@@ -31,6 +31,8 @@ public:
 	bool				clearFlg = false;
 
 	float               Vertical_movement;
+
+	int                 delayTimer = 0;
 	   
 	void    Jump();
 	void	Move();																												//	ˆÚ“®ŠÖ”
