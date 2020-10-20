@@ -1,6 +1,7 @@
 // インクルード ----------------------------------------------------------------------------------
 #include "scene_manager.h"
 
+#include "clear.h"
 #include "game.h"
 #include "select.h"
 #include "title.h"
@@ -188,6 +189,30 @@ void SceneGame::render(void)
 void SceneGame::end(void)
 {
 
+}
+
+// Clear
+void SceneClear::init(void)
+{
+    pClear.init();
+    timer = 0;
+}
+
+void SceneClear::update(void)
+{
+
+    pClear.update();
+    timer++;
+}
+
+void SceneClear::render(void)
+{
+    pClear.render();
+}
+
+void SceneClear::end(void)
+{
+    pClear.end();
 }
 
 // Relay

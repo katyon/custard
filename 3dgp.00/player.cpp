@@ -3,6 +3,7 @@
 #include	"particle.h"
 #include    "stage.h"
 #include    "collision.h"
+#include    "scene_manager.h"
 
 extern MyMesh blocks[MAP_HEIGHT][MAP_WIDTH];
 extern int map0[MAP_HEIGHT][MAP_WIDTH];
@@ -19,6 +20,7 @@ void	Player::Initialize()
 	//obj.Load(filename);
 	pos = { -7, 5, 0 };
 	speed = 0.07f;
+	resetFlg = true;
 }
 //void	Player::Initialize(const char* filename)
 //{
@@ -224,10 +226,12 @@ void	Player::Update()
 
 				case SPINE:
 					// 死亡フラグtrue
+					deathFlg = true;
 					break;
 
 				case RED_SPINE:
 					// 死亡フラグtrue
+					deathFlg = true;
 					break;
 
 				case TRANSPARENT_RED_SPINE:
@@ -235,6 +239,7 @@ void	Player::Update()
 
 				case BLUE_SPINE:
 					// 死亡フラグtrue
+					deathFlg = true;
 					break;
 
 				case TRANSPARENT_BLUE_SPINE:
@@ -256,9 +261,28 @@ void	Player::Update()
 
 				case CLEAR:
 					// クリアフラグtrue
+					clearFlg = true;
 					break;
 				}
 			}
+		}
+	}
+
+	if (clearFlg)
+	{
+		pSceneManager.setChangeScene(state_clear);
+	}
+
+	if (deathFlg)
+	{
+		obj.scale.x -= 0.05f;
+		obj.scale.y -= 0.05f;		
+		obj.scale.z -= 0.05f;
+
+		if (obj.scale.x < 0)
+		{
+			resetFlg = true;
+			deathFlg = false;
 		}
 	}
 

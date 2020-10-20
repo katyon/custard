@@ -25,9 +25,13 @@ public:
 
 	bool                skyFlg;
 	bool                groundFlg;
+	bool                deathFlg = false;
+	bool				resetFlg = false;
+
+	bool				clearFlg = false;
 
 	float               Vertical_movement;
-
+	   
 	void    Jump();
 	void	Move();																												//	ˆÚ“®ŠÖ”
 

@@ -9,6 +9,7 @@ enum SCENES
     state_title,
     state_select,
     state_game,
+    state_clear,
 
     relay
 };
@@ -87,6 +88,25 @@ public:
     static  inline SceneGame& getInstance()
     {
         static SceneGame instance;
+        return instance;
+    }
+
+    void init(void);
+    void update(void);
+    void render(void);
+    void end(void);
+
+    int timer = 0;
+private:
+};
+
+#define pSceneClear SceneClear::getInstance()
+class SceneClear
+{
+public:
+    static  inline SceneClear& getInstance()
+    {
+        static SceneClear instance;
         return instance;
     }
 

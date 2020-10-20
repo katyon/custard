@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClCompile Include="blender.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="clear.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="geometric_primitive.cpp" />
@@ -180,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="blender.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="clear.h" />
     <ClInclude Include="collision.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="game.h" />
